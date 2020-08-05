@@ -11,14 +11,14 @@ async function run(): Promise<void> {
   const platform = os.platform().toLowerCase()
   const onePasswordUrl = `https://cache.agilebits.com/dist/1P/op/pkg/v${onePasswordVersion}/op_${platform}_amd64_v${onePasswordVersion}.zip`
   const destination = `${process.env.HOME}/bin`
-  const deviceId = execSync('head -c 16 /dev/urandom | base32 | tr -d = | tr [:upper:] [:lower:]').toString()
+  const deviceId = execSync('head -c 16 /dev/urandom | base32 | tr -d = | tr [:upper:] [:lower:]').toString().trim()
   exportVariable('OP_DEVICE', deviceId)
   const options: ExecOptions = {
     env: {
-      OP_DEVICE: 'tbysdkwr6oujnyv4unrpzd3bmq',
+      OP_DEVICE: deviceId,
     },
     input: Buffer.alloc(getInput('password').length, getInput('password')),
-    listeners: { stdout: (output) => exportVariable('OP_SESSION_my', output.toString()) },
+    listeners: { stdout: (output) => exportVariable('OP_SESSION_my', output.toString().trim()) },
   }
   try {
     const path = await downloadTool(onePasswordUrl)
