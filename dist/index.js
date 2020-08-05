@@ -1117,8 +1117,8 @@ function run() {
             yield io_util_1.chmod(`${destination}/op`, '0755');
             core_1.addPath(destination);
             const deviceId = child_process_1.execSync('head -c 16 /dev/urandom | base32 | tr -d = | tr [:upper:] [:lower:]').toString();
-            const sessionToken = child_process_1.execSync(`printf '%s' "${core_1.getInput('password')}" | OP_DEVICE=${deviceId} op signin ${core_1.getInput('url')} ${core_1.getInput('email')} ${core_1.getInput('secret')} --raw`).toString();
             core_1.exportVariable('OP_DEVICE', deviceId);
+            const sessionToken = child_process_1.execSync(`OP_DEVICE=${deviceId} printf '%s' "${core_1.getInput('password')}" | op signin ${core_1.getInput('url')} ${core_1.getInput('email')} ${core_1.getInput('secret')} --raw`).toString();
             core_1.exportVariable('OP_SESSION_my', sessionToken);
         }
         catch (error) {
