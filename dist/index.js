@@ -1121,7 +1121,7 @@ function run() {
                 stdout: (output) => {
                     const sessionId = output.toString().trim();
                     core_1.exportVariable('OP_DEVICE', deviceId);
-                    core_1.exportVariable('OP_SESSION_GITHUB', sessionId);
+                    core_1.exportVariable('OP_SESSION_my', sessionId);
                     core_1.setOutput('session', sessionId);
                 },
             },
@@ -1132,15 +1132,15 @@ function run() {
             yield io_1.mv(`${extracted}/op`, `${destination}/op`);
             yield io_util_1.chmod(`${destination}/op`, '0755');
             core_1.addPath(destination);
-            yield exec_1.exec(`op`, ['signin', core_1.getInput('url'), core_1.getInput('email'), core_1.getInput('secret'), '--raw', '--shorthand=GITHUB'], options);
+            yield exec_1.exec(`op`, ['signin', core_1.getInput('url'), core_1.getInput('email'), core_1.getInput('secret'), '--raw'], options);
+            yield exec_1.exec('op', ['list', 'vaults'], { env: { OP_DEVICE: deviceId } });
         }
         catch (error) {
             core_1.setFailed(error.message);
         }
     });
 }
-// eslint-disable-next-line github/no-then
-run().then(() => __awaiter(void 0, void 0, void 0, function* () { return exec_1.exec('op', ['list', 'vaults', '--account=GITHUB'], { env: { OP_DEVICE: deviceId } }); }));
+run();
 //# sourceMappingURL=main.js.map
 
 /***/ }),

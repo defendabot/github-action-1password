@@ -22,7 +22,7 @@ async function run(): Promise<void> {
       stdout: (output) => {
         const sessionId = output.toString().trim()
         exportVariable('OP_DEVICE', deviceId)
-        exportVariable('OP_SESSION_GITHUB', sessionId)
+        exportVariable('OP_SESSION_my', sessionId)
         setOutput('session', sessionId)
       },
     },
@@ -33,11 +33,10 @@ async function run(): Promise<void> {
     await mv(`${extracted}/op`, `${destination}/op`)
     await chmod(`${destination}/op`, '0755')
     addPath(destination)
-    await exec(`op`, ['signin', getInput('url'), getInput('email'), getInput('secret'), '--raw', '--shorthand=GITHUB'], options)
+    await exec(`op`, ['signin', getInput('url'), getInput('email'), getInput('secret'), '--raw'], options)
+    await exec('op', ['list', 'vaults'], { env: { OP_DEVICE: deviceId } })
   } catch (error) {
     setFailed(error.message)
   }
 }
-
-// eslint-disable-next-line github/no-then
-run().then(async () => exec('op', ['list', 'vaults', '--account=GITHUB'], { env: { OP_DEVICE: deviceId } }))
+run()
