@@ -24,7 +24,7 @@ async function run(): Promise<void> {
     const path = await downloadTool(onePasswordUrl)
     const extracted = await extractZip(path)
     await mv(`${extracted}/op`, `${destination}/op`)
-    await chmod(`${destination}/op`, '+x')
+    await chmod(`${destination}/op`, 0o755)
     addPath(destination)
     const authCmd = `echo "${getInput('password')}" - op signin`
     await exec(authCmd, [getInput('url'), getInput('email'), getInput('secret')], options)
