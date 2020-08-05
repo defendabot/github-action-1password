@@ -3,7 +3,6 @@ import { addPath, exportVariable, getInput, setFailed } from '@actions/core'
 import { downloadTool, extractZip } from '@actions/tool-cache'
 import { mv } from '@actions/io'
 import { chmod } from '@actions/io/lib/io-util'
-import { exec } from '@actions/exec'
 import { execSync } from 'child_process'
 
 async function run(): Promise<void> {
@@ -28,5 +27,4 @@ async function run(): Promise<void> {
   }
 }
 
-// eslint-disable-next-line github/no-then
-run().then(async () => exec('op'))
+run()

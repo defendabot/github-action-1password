@@ -1103,7 +1103,6 @@ const core_1 = __webpack_require__(470);
 const tool_cache_1 = __webpack_require__(533);
 const io_1 = __webpack_require__(1);
 const io_util_1 = __webpack_require__(672);
-const exec_1 = __webpack_require__(986);
 const child_process_1 = __webpack_require__(129);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -1127,8 +1126,7 @@ function run() {
         }
     });
 }
-// eslint-disable-next-line github/no-then
-run().then(() => __awaiter(void 0, void 0, void 0, function* () { return exec_1.exec('op'); }));
+run();
 //# sourceMappingURL=main.js.map
 
 /***/ }),
