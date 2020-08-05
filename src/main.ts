@@ -4,6 +4,7 @@ import { downloadTool, extractZip } from '@actions/tool-cache'
 import { mv } from '@actions/io'
 import { chmod } from '@actions/io/lib/io-util'
 import { exec } from '@actions/exec'
+import { execSync } from 'child_process'
 
 async function run(): Promise<void> {
   const onePasswordVersion = getInput('version')
@@ -16,7 +17,11 @@ async function run(): Promise<void> {
     await mv(`${extracted}/op`, `${destination}/op`)
     await chmod(`${destination}/op`, '0755')
     addPath(destination)
-    exportVariable('OP_DEVICE', Math.random().toString(36).slice(2))
+    exportVariable('OP_DEVICE', Math.random().toString(32).slice(2))
+    const output = execSync(
+      `printf '%s' '${getInput('password')}' | op signin ${getInput('url')} ${getInput('email')} ${getInput('secret')} --raw`,
+    )
+    exportVariable('OP_SESSION_my', output)
   } catch (error) {
     setFailed(error.message)
   }

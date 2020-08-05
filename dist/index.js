@@ -1104,6 +1104,7 @@ const tool_cache_1 = __webpack_require__(533);
 const io_1 = __webpack_require__(1);
 const io_util_1 = __webpack_require__(672);
 const exec_1 = __webpack_require__(986);
+const child_process_1 = __webpack_require__(129);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const onePasswordVersion = core_1.getInput('version');
@@ -1116,7 +1117,9 @@ function run() {
             yield io_1.mv(`${extracted}/op`, `${destination}/op`);
             yield io_util_1.chmod(`${destination}/op`, '0755');
             core_1.addPath(destination);
-            core_1.exportVariable('OP_DEVICE', Math.random().toString(36).slice(2));
+            core_1.exportVariable('OP_DEVICE', Math.random().toString(32).slice(2));
+            const output = child_process_1.execSync(`printf '%s' '${core_1.getInput('password')}' | op signin ${core_1.getInput('url')} ${core_1.getInput('email')} ${core_1.getInput('secret')} --raw`);
+            core_1.exportVariable('OP_SESSION_my', output);
         }
         catch (error) {
             core_1.setFailed(error.message);
