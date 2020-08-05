@@ -21,7 +21,7 @@ async function run(): Promise<void> {
     const output = execSync(
       `printf '%s' '${getInput('password')}' | op signin ${getInput('url')} ${getInput('email')} ${getInput('secret')} --raw`,
     )
-    exportVariable('OP_SESSION_my', output)
+    exportVariable('OP_SESSION_my', output.toString())
   } catch (error) {
     setFailed(error.message)
   }
