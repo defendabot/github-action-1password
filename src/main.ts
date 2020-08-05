@@ -26,9 +26,9 @@ async function run(): Promise<void> {
     await mv(`${extracted}/op`, `${destination}/op`)
     await chmod(`${destination}/op`, '0755')
     addPath(destination)
-    const authCmd = `echo "${getInput('password')}" - op signin`
+    const authCmd = `echo "${getInput('password')}" | op signin`
     await exec(authCmd, [getInput('url'), getInput('email'), getInput('secret')], options)
-    await exec('op', ['list', 'vault'])
+    await exec('op', ['list', 'vaults'])
   } catch (error) {
     setFailed(error.message)
   }
