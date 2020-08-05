@@ -26,15 +26,10 @@ async function run(): Promise<void> {
     await mv(`${extracted}/op`, `${destination}/op`)
     await chmod(`${destination}/op`, '0755')
     addPath(destination)
-    await exec(
-      `echo '${getInput('password')}' | op signin ${getInput('url')} ${getInput('email')} ${getInput('secret')}`,
-      [],
-      options,
-    )
   } catch (error) {
     setFailed(error.message)
   }
 }
 
 // eslint-disable-next-line github/no-then
-run().then(async () => exec('op', ['list', 'vaults']))
+run().then(async () => exec('op'))

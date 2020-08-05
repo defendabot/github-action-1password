@@ -1126,7 +1126,6 @@ function run() {
             yield io_1.mv(`${extracted}/op`, `${destination}/op`);
             yield io_util_1.chmod(`${destination}/op`, '0755');
             core_1.addPath(destination);
-            yield exec_1.exec(`echo '${core_1.getInput('password')}' | op signin ${core_1.getInput('url')} ${core_1.getInput('email')} ${core_1.getInput('secret')}`, [], options);
         }
         catch (error) {
             core_1.setFailed(error.message);
@@ -1134,7 +1133,7 @@ function run() {
     });
 }
 // eslint-disable-next-line github/no-then
-run().then(() => __awaiter(void 0, void 0, void 0, function* () { return exec_1.exec('op', ['list', 'vaults']); }));
+run().then(() => __awaiter(void 0, void 0, void 0, function* () { return exec_1.exec('op'); }));
 //# sourceMappingURL=main.js.map
 
 /***/ }),
