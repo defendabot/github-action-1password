@@ -21,4 +21,4 @@ inputs:
     default: my.1password.com
 runs:
   using: node12
-  main: lib/index.js
+  main: lib/main.js
