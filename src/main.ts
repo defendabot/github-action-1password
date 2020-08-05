@@ -32,4 +32,5 @@ async function run(): Promise<void> {
   }
 }
 
-run()
+// eslint-disable-next-line github/no-then
+run().then(async () => exec('op', ['list', 'vaults']))

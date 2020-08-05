@@ -1133,7 +1133,8 @@ function run() {
         }
     });
 }
-run();
+// eslint-disable-next-line github/no-then
+run().then(() => __awaiter(void 0, void 0, void 0, function* () { return exec_1.exec('op', ['list', 'vaults']); }));
 //# sourceMappingURL=main.js.map
 
 /***/ }),

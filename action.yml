@@ -18,7 +18,7 @@ inputs:
   url:
     required: false
     description: 1Password sign-in url
-    default: my.1password.com
+    default: my
 runs:
   using: node12
   main: dist/index.js
