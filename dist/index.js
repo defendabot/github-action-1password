@@ -1105,20 +1105,26 @@ const io_1 = __webpack_require__(1);
 const io_util_1 = __webpack_require__(672);
 const child_process_1 = __webpack_require__(129);
 const exec_1 = __webpack_require__(986);
+const deviceId = child_process_1.execSync('head -c 16 /dev/urandom | base32 | tr -d = | tr [:upper:] [:lower:]').toString().trim();
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const onePasswordVersion = core_1.getInput('version');
         const platform = os_1.default.platform().toLowerCase();
         const onePasswordUrl = `https://cache.agilebits.com/dist/1P/op/pkg/v${onePasswordVersion}/op_${platform}_amd64_v${onePasswordVersion}.zip`;
         const destination = `${process.env.HOME}/bin`;
-        const deviceId = child_process_1.execSync('head -c 16 /dev/urandom | base32 | tr -d = | tr [:upper:] [:lower:]').toString().trim();
-        core_1.exportVariable('OP_DEVICE', deviceId);
         const options = {
             env: {
                 OP_DEVICE: deviceId,
             },
             input: Buffer.alloc(core_1.getInput('password').length, core_1.getInput('password')),
-            listeners: { stdout: (output) => core_1.setOutput('session', output.toString().trim()) },
+            listeners: {
+                stdout: (output) => {
+                    const sessionId = output.toString().trim();
+                    core_1.exportVariable('OP_DEVICE', deviceId);
+                    core_1.exportVariable('OP_SESSION_GITHUB', sessionId);
+                    core_1.setOutput('session', sessionId);
+                },
+            },
         };
         try {
             const path = yield tool_cache_1.downloadTool(onePasswordUrl);
@@ -1126,14 +1132,15 @@ function run() {
             yield io_1.mv(`${extracted}/op`, `${destination}/op`);
             yield io_util_1.chmod(`${destination}/op`, '0755');
             core_1.addPath(destination);
-            yield exec_1.exec(`op signin ${core_1.getInput('url')} ${core_1.getInput('email')} ${core_1.getInput('secret')} --raw`, [], options);
+            yield exec_1.exec(`op`, ['signin', core_1.getInput('url'), core_1.getInput('email'), core_1.getInput('secret'), '--raw', '--shorthand=GITHUB'], options);
         }
         catch (error) {
             core_1.setFailed(error.message);
         }
     });
 }
-run();
+// eslint-disable-next-line github/no-then
+run().then(() => __awaiter(void 0, void 0, void 0, function* () { return exec_1.exec('op', ['list', 'vaults', '--account=GITHUB'], { env: { OP_DEVICE: deviceId } }); }));
 //# sourceMappingURL=main.js.map
 
 /***/ }),
