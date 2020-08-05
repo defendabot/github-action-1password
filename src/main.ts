@@ -1,18 +1,36 @@
-import * as core from '@actions/core'
-import {wait} from './wait'
+import os from 'os'
+import { addPath, getInput, setFailed } from '@actions/core'
+import { downloadTool, extractZip } from '@actions/tool-cache'
+import { mv } from '@actions/io'
+import { chmod } from '@actions/io/lib/io-util'
+import { exec, ExecOptions } from '@actions/exec'
 
 async function run(): Promise<void> {
+  const onePasswordVersion = getInput('version')
+  const platform = os.platform().toLowerCase()
+  const onePasswordUrl = `https://cache.agilebits.com/dist/1P/op/pkg/v${onePasswordVersion}/op_${platform}_amd64_v${onePasswordVersion}.zip`
+  const destination = `${process.env.HOME}/bin`
+  const options: ExecOptions = {}
+  options.listeners = {
+    stdout: (data) => {
+      const sessionToken = data.toString().trim()
+      exec(sessionToken)
+    },
+    stderr: (data: Buffer) => {
+      setFailed(data.toString())
+    },
+  }
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
-
-    core.setOutput('time', new Date().toTimeString())
+    const path = await downloadTool(onePasswordUrl)
+    const extracted = await extractZip(path)
+    await mv(`${extracted}/op`, `${destination}/op`)
+    await chmod(`${destination}/op`, '+x')
+    addPath(destination)
+    const authCmd = `echo "${getInput('password')}" - op signin`
+    await exec(authCmd, [getInput('url'), getInput('email'), getInput('secret')], options)
+    await exec('op', ['list', 'vault'])
   } catch (error) {
-    core.setFailed(error.message)
+    setFailed(error.message)
   }
 }
 

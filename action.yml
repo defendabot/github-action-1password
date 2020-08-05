@@ -1,11 +1,24 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 1Password Github Secrets sync-up
+description: Synchronize Github Secrets with 1Password vault credentials
+author: defendabot
 inputs:
-  milliseconds: # change this
+  version:
+    required: false
+    description: 1Password CLI version
+    default: 1.4.0
+  email:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 1Password sign-in email
+  password:
+    required: true
+    description: 1Password sign-in password
+  secret:
+    required: true
+    description: 1Password sign-in secret
+  url:
+    required: false
+    description: 1Password sign-in url
+    default: my.1password.com
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: node12
+  main: lib/index.js
