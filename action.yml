@@ -19,6 +19,9 @@ inputs:
     required: false
     description: 1Password sign-in url
     default: my
+outputs:
+  session:
+    description: Session token
 runs:
   using: node12
   main: dist/index.js

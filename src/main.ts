@@ -1,5 +1,5 @@
 import os from 'os'
-import { addPath, exportVariable, getInput, setFailed } from '@actions/core'
+import { addPath, exportVariable, getInput, setFailed, setOutput } from '@actions/core'
 import { downloadTool, extractZip } from '@actions/tool-cache'
 import { mv } from '@actions/io'
 import { chmod } from '@actions/io/lib/io-util'
@@ -18,7 +18,7 @@ async function run(): Promise<void> {
       OP_DEVICE: deviceId,
     },
     input: Buffer.alloc(getInput('password').length, getInput('password')),
-    listeners: { stdout: (output) => exportVariable('OP_SESSION_my', output.toString().trim()) },
+    listeners: { stdout: (output) => setOutput('session', output.toString().trim()) },
   }
   try {
     const path = await downloadTool(onePasswordUrl)
@@ -32,5 +32,4 @@ async function run(): Promise<void> {
   }
 }
 
-// eslint-disable-next-line github/no-then
-run().then(async () => exec('op', ['list', 'vaults']))
+run()

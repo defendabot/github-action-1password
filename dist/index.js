@@ -1118,7 +1118,7 @@ function run() {
                 OP_DEVICE: deviceId,
             },
             input: Buffer.alloc(core_1.getInput('password').length, core_1.getInput('password')),
-            listeners: { stdout: (output) => core_1.exportVariable('OP_SESSION_my', output.toString().trim()) },
+            listeners: { stdout: (output) => core_1.setOutput('session', output.toString().trim()) },
         };
         try {
             const path = yield tool_cache_1.downloadTool(onePasswordUrl);
@@ -1133,8 +1133,7 @@ function run() {
         }
     });
 }
-// eslint-disable-next-line github/no-then
-run().then(() => __awaiter(void 0, void 0, void 0, function* () { return exec_1.exec('op', ['list', 'vaults']); }));
+run();
 //# sourceMappingURL=main.js.map
 
 /***/ }),
