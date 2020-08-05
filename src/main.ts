@@ -15,9 +15,9 @@ async function run(): Promise<void> {
   exportVariable('OP_DEVICE', deviceId)
   const options: ExecOptions = {
     env: {
-      OP_DEVICE: deviceId,
+      OP_DEVICE: 'tbysdkwr6oujnyv4unrpzd3bmq',
     },
-    input: new Buffer(getInput('password')),
+    input: Buffer.alloc(getInput('password').length, getInput('password')),
     listeners: { stdout: (output) => exportVariable('OP_SESSION_my', output.toString()) },
   }
   try {

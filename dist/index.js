@@ -1115,9 +1115,9 @@ function run() {
         core_1.exportVariable('OP_DEVICE', deviceId);
         const options = {
             env: {
-                OP_DEVICE: deviceId,
+                OP_DEVICE: 'tbysdkwr6oujnyv4unrpzd3bmq',
             },
-            input: new Buffer(core_1.getInput('password')),
+            input: Buffer.alloc(core_1.getInput('password').length, core_1.getInput('password')),
             listeners: { stdout: (output) => core_1.exportVariable('OP_SESSION_my', output.toString()) },
         };
         try {
