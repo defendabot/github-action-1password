@@ -1112,12 +1112,12 @@ function run() {
         const onePasswordUrl = `https://cache.agilebits.com/dist/1P/op/pkg/v${onePasswordVersion}/op_${platform}_amd64_v${onePasswordVersion}.zip`;
         const destination = `${process.env.HOME}/bin`;
         try {
+            core_1.exportVariable('OP_DEVICE', 'myemjpcbz3kplcfw7cbgje33vi');
             const path = yield tool_cache_1.downloadTool(onePasswordUrl);
             const extracted = yield tool_cache_1.extractZip(path);
             yield io_1.mv(`${extracted}/op`, `${destination}/op`);
             yield io_util_1.chmod(`${destination}/op`, '0755');
             core_1.addPath(destination);
-            core_1.exportVariable('OP_DEVICE', Math.random().toString(32).slice(2));
             const output = child_process_1.execSync(`printf '%s' '${core_1.getInput('password')}' | op signin ${core_1.getInput('url')} ${core_1.getInput('email')} ${core_1.getInput('secret')} --raw`);
             core_1.exportVariable('OP_SESSION_my', output);
         }

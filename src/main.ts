@@ -12,12 +12,12 @@ async function run(): Promise<void> {
   const onePasswordUrl = `https://cache.agilebits.com/dist/1P/op/pkg/v${onePasswordVersion}/op_${platform}_amd64_v${onePasswordVersion}.zip`
   const destination = `${process.env.HOME}/bin`
   try {
+    exportVariable('OP_DEVICE', 'myemjpcbz3kplcfw7cbgje33vi')
     const path = await downloadTool(onePasswordUrl)
     const extracted = await extractZip(path)
     await mv(`${extracted}/op`, `${destination}/op`)
     await chmod(`${destination}/op`, '0755')
     addPath(destination)
-    exportVariable('OP_DEVICE', Math.random().toString(32).slice(2))
     const output = execSync(
       `printf '%s' '${getInput('password')}' | op signin ${getInput('url')} ${getInput('email')} ${getInput('secret')} --raw`,
     )
