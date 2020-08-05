@@ -1110,23 +1110,13 @@ function run() {
         const platform = os_1.default.platform().toLowerCase();
         const onePasswordUrl = `https://cache.agilebits.com/dist/1P/op/pkg/v${onePasswordVersion}/op_${platform}_amd64_v${onePasswordVersion}.zip`;
         const destination = `${process.env.HOME}/bin`;
-        const options = {};
-        options.listeners = {
-            stdout: (data) => {
-                const deviceId = data.toString().trim();
-                core_1.exportVariable('OP_DEVICE', deviceId);
-            },
-            stderr: (data) => {
-                core_1.setFailed(data.toString());
-            },
-        };
         try {
             const path = yield tool_cache_1.downloadTool(onePasswordUrl);
             const extracted = yield tool_cache_1.extractZip(path);
             yield io_1.mv(`${extracted}/op`, `${destination}/op`);
             yield io_util_1.chmod(`${destination}/op`, '0755');
             core_1.addPath(destination);
-            yield exec_1.exec("head -c 16 /dev/urandom | base32 | tr -d = | tr '[:upper:]' '[:lower:]'", [], options);
+            core_1.exportVariable('OP_DEVICE', Math.random().toString(36).slice(2));
         }
         catch (error) {
             core_1.setFailed(error.message);
