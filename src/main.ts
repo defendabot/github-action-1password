@@ -1,5 +1,5 @@
 import os from 'os'
-import { addPath, getInput, setFailed } from '@actions/core'
+import { addPath, exportVariable, getInput, setFailed } from '@actions/core'
 import { downloadTool, extractZip } from '@actions/tool-cache'
 import { mv } from '@actions/io'
 import { chmod } from '@actions/io/lib/io-util'
@@ -13,8 +13,9 @@ async function run(): Promise<void> {
   const options: ExecOptions = {}
   options.listeners = {
     stdout: (data) => {
-      const sessionToken = data.toString().trim()
-      exec(sessionToken)
+      const deviceId = data.toString().trim()
+      exportVariable('OP_DEVICE', deviceId)
+      exec('')
     },
     stderr: (data: Buffer) => {
       setFailed(data.toString())
@@ -26,6 +27,7 @@ async function run(): Promise<void> {
     await mv(`${extracted}/op`, `${destination}/op`)
     await chmod(`${destination}/op`, '0755')
     addPath(destination)
+    await exec("head -c 16 /dev/urandom | base32 | tr -d = | tr '[:upper:]' '[:lower:]'", [], options)
   } catch (error) {
     setFailed(error.message)
   }

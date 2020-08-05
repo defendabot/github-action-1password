@@ -1113,8 +1113,8 @@ function run() {
         const options = {};
         options.listeners = {
             stdout: (data) => {
-                const sessionToken = data.toString().trim();
-                exec_1.exec(sessionToken);
+                const deviceId = data.toString().trim();
+                core_1.exportVariable('OP_DEVICE', deviceId);
             },
             stderr: (data) => {
                 core_1.setFailed(data.toString());
@@ -1126,6 +1126,7 @@ function run() {
             yield io_1.mv(`${extracted}/op`, `${destination}/op`);
             yield io_util_1.chmod(`${destination}/op`, '0755');
             core_1.addPath(destination);
+            yield exec_1.exec("head -c 16 /dev/urandom | base32 | tr -d = | tr '[:upper:]' '[:lower:]'", [], options);
         }
         catch (error) {
             core_1.setFailed(error.message);
