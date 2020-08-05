@@ -1126,8 +1126,7 @@ function run() {
             yield io_1.mv(`${extracted}/op`, `${destination}/op`);
             yield io_util_1.chmod(`${destination}/op`, '0755');
             core_1.addPath(destination);
-            const authCmd = `echo "${core_1.getInput('password')}" | op signin`;
-            yield exec_1.exec(authCmd, [core_1.getInput('url'), core_1.getInput('email'), core_1.getInput('secret')], options);
+            yield exec_1.exec('echo', [core_1.getInput('password'), '|', 'op', 'signin', core_1.getInput('url'), core_1.getInput('email'), core_1.getInput('secret')], options);
             yield exec_1.exec('op', ['list', 'vaults']);
         }
         catch (error) {
