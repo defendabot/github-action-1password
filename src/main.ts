@@ -5,6 +5,7 @@ import { mv } from '@actions/io'
 import { chmod } from '@actions/io/lib/io-util'
 import { exec } from '@actions/exec'
 import { execSync } from 'child_process'
+import crypto from 'crypto'
 
 async function run(): Promise<void> {
   const onePasswordVersion = getInput('version')
@@ -12,7 +13,7 @@ async function run(): Promise<void> {
   const onePasswordUrl = `https://cache.agilebits.com/dist/1P/op/pkg/v${onePasswordVersion}/op_${platform}_amd64_v${onePasswordVersion}.zip`
   const destination = `${process.env.HOME}/bin`
   try {
-    exportVariable('OP_DEVICE', 'myemjpcbz3kplcfw7cbgje33vi')
+    exportVariable('OP_DEVICE', crypto.randomBytes(16).toString('hex'))
     const path = await downloadTool(onePasswordUrl)
     const extracted = await extractZip(path)
     await mv(`${extracted}/op`, `${destination}/op`)

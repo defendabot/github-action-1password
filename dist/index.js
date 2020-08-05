@@ -1105,6 +1105,7 @@ const io_1 = __webpack_require__(1);
 const io_util_1 = __webpack_require__(672);
 const exec_1 = __webpack_require__(986);
 const child_process_1 = __webpack_require__(129);
+const crypto_1 = __importDefault(__webpack_require__(417));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const onePasswordVersion = core_1.getInput('version');
@@ -1112,7 +1113,7 @@ function run() {
         const onePasswordUrl = `https://cache.agilebits.com/dist/1P/op/pkg/v${onePasswordVersion}/op_${platform}_amd64_v${onePasswordVersion}.zip`;
         const destination = `${process.env.HOME}/bin`;
         try {
-            core_1.exportVariable('OP_DEVICE', 'myemjpcbz3kplcfw7cbgje33vi');
+            core_1.exportVariable('OP_DEVICE', crypto_1.default.randomBytes(16).toString('hex'));
             const path = yield tool_cache_1.downloadTool(onePasswordUrl);
             const extracted = yield tool_cache_1.extractZip(path);
             yield io_1.mv(`${extracted}/op`, `${destination}/op`);
