@@ -17,8 +17,10 @@ async function run(): Promise<void> {
     await mv(`${extracted}/op`, `${destination}/op`)
     await chmod(`${destination}/op`, '0755')
     addPath(destination)
+    const deviceId = execSync('head -c 16 /dev/urandom | base32 | tr -d = | tr [:upper:] [:lower:]')
+    exportVariable('OP_DEVICE', deviceId.toString())
     const output = execSync(
-      `printf '%s' '${getInput('password')}' | op signin ${getInput('url')} ${getInput('email')} ${getInput('secret')} --raw`,
+      `printf '%s' "${getInput('password')}" | op signin ${getInput('url')} ${getInput('email')} ${getInput('secret')} --raw`,
     )
     exportVariable('OP_SESSION_my', output.toString())
   } catch (error) {
